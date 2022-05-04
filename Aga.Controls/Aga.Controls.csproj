@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <ProductVersion>9.0.30729</ProductVersion>
     <TargetFramework>net472</TargetFramework>
     <AssemblyTitle>Aga.Controls</AssemblyTitle>
@@ -117,5 +118,8 @@
   <ItemGroup>
     <Compile Remove="Tree\ColumnCollection.cs" />
     <Compile Remove="Tree\NativeMethods.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
   </ItemGroup>
 </Project>

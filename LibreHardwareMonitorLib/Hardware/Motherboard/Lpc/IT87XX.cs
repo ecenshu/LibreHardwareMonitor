@@ -68,9 +68,10 @@ namespace LibreHardwareMonitor.Hardware.Motherboard.Lpc
             if (!valid || ((configuration & 0x10) == 0 && chip != Chip.IT8655E && chip != Chip.IT8665E))
                 return;
 
-
+            // https://github.com/a1wong/it87/blob/master/it87.c
+            // https://github.com/a1wong/it87/blob/master/ITE_Register_map.pdf
             FAN_PWM_CTRL_REG = chip == Chip.IT8665E
-                ? new byte[] { 0x15, 0x16, 0x17, 0x1e, 0x1f }
+                ? new byte[] { 0x15, 0x16, 0x17, 0x1e, 0x1f, 0x92 }
                 : new byte[] { 0x15, 0x16, 0x17, 0x7f, 0xa7, 0xaf };
 
             _bankCount = chip switch
@@ -120,12 +121,19 @@ namespace LibreHardwareMonitor.Hardware.Motherboard.Lpc
                     break;
                 }
                 case Chip.IT8665E:
-                case Chip.IT8686E:
                 {
                     Voltages = new float?[10];
                     Temperatures = new float?[6];
                     Fans = new float?[6];
-                    Controls = new float?[5];
+                    Controls = new float?[6];
+                    break;
+                }
+                case Chip.IT8686E:
+                {
+                    Voltages = new float?[10];
+                    Temperatures = new float?[6];
+                    Fans = new float?[5];
+                    Controls = new float?[6];
                     break;
                 }
                 case Chip.IT8688E:
@@ -244,8 +252,20 @@ namespace LibreHardwareMonitor.Hardware.Motherboard.Lpc
                     _fansDisabled[4] = (modes & (1 << 5)) == 0;
                 }
 
-                if (Fans.Length >= 6)
-                    _fansDisabled[5] = (modes & (1 << 2)) == 0;
+                if (chip == Chip.IT8665E)
+                {
+                    if (Fans.Length >= 6)
+                    {
+                        // Fan 6 FAN6_TAC_EN located elsewhere https://github.com/a1wong/it87/blob/master/ITE_Register_map.pdf
+                        modes = ReadByte(0x0b, out valid);
+                        _fansDisabled[5] = (modes & (1 << 3)) == 0;
+                    }
+                }
+                else
+                {
+                    if (Fans.Length >= 6)
+                        _fansDisabled[5] = (modes & (1 << 2)) == 0;
+                }
             }
 
             // Set the number of GPIO sets
@@ -645,8 +665,8 @@ namespace LibreHardwareMonitor.Hardware.Motherboard.Lpc
 
         private readonly byte[] FAN_PWM_CTRL_REG;
         private readonly byte[] FAN_PWM_CTRL_EXT_REG = { 0x63, 0x6b, 0x73, 0x7b, 0xa3, 0xab};
-        private readonly byte[] FAN_TACHOMETER_EXT_REG = { 0x18, 0x19, 0x1a, 0x81, 0x83, 0x4d };
-        private readonly byte[] FAN_TACHOMETER_REG = { 0x0d, 0x0e, 0x0f, 0x80, 0x82, 0x4c };
+        private readonly byte[] FAN_TACHOMETER_EXT_REG = { 0x18, 0x19, 0x1a, 0x81, 0x83, 0x94 };
+        private readonly byte[] FAN_TACHOMETER_REG = { 0x0d, 0x0e, 0x0f, 0x80, 0x82, 0x93 };
 
         // Address of the Fan Controller Main Control Register.
         // No need for the 2nd control register (bit 7 of 0x15 0x16 0x17),
