@@ -209,6 +209,17 @@ namespace LibreHardwareMonitor.Hardware.Motherboard.Lpc
                     _fansDisabled[4] = (modes & (1 << 5)) == 0;
                 }
 
+                if (chip == Chip.IT8665E)
+                {
+                    if (Fans.Length >= 6)
+                    {
+                        // Fan 6 FAN6_TAC_EN located elsewhere https://github.com/a1wong/it87/blob/master/ITE_Register_map.pdf
+                        modes = ReadByte(0x0b, out valid);
+                        _fansDisabled[5] = (modes & (1 << 3)) == 0;
+                    }
+                }
+                else
+
                 if (Fans.Length >= 6)
                     _fansDisabled[5] = (modes & (1 << 2)) == 0;
             }
