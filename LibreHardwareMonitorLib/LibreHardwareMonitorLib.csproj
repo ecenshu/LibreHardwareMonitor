@@ -17,6 +17,7 @@
     <RepositoryUrl>https://github.com/LibreHardwareMonitor/LibreHardwareMonitor</RepositoryUrl>
     <LangVersion>latest</LangVersion>
     <PackageIcon>packageicon.png</PackageIcon>
+    <Product>LibreHardwareMonitorLib-ecenshu</Product>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <OutputPath>..\bin\Debug\</OutputPath>
