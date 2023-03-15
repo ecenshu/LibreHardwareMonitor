@@ -66,11 +66,13 @@ internal class IT87XX : ISuperIO
         if (!valid || ((configuration & 0x10) == 0 && chip != Chip.IT8655E && chip != Chip.IT8665E))
             return;
 
-            // https://github.com/a1wong/it87/blob/master/it87.c
-            // https://github.com/a1wong/it87/blob/master/ITE_Register_map.pdf
-            FAN_PWM_CTRL_REG = chip == Chip.IT8665E
-                ? new byte[] { 0x15, 0x16, 0x17, 0x1e, 0x1f, 0x92 }
-                : new byte[] { 0x15, 0x16, 0x17, 0x7f, 0xa7, 0xaf };
+        // https://github.com/a1wong/it87/blob/master/it87.c
+        // https://github.com/a1wong/it87/blob/master/ITE_Register_map.pdf
+        FAN_PWM_CTRL_REG = chip switch
+        {
+            Chip.IT8665E or Chip.IT8625E =>new byte[] { 0x15, 0x16, 0x17, 0x1e, 0x1f, 0x92 },
+            _ => new byte[] { 0x15, 0x16, 0x17, 0x7f, 0xa7, 0xaf }
+        };
 
         _bankCount = chip switch
         {
@@ -86,6 +88,7 @@ internal class IT87XX : ISuperIO
             Chip.IT8689E or
             Chip.IT8695E or
             Chip.IT8628E or
+            Chip.IT8625E or
             Chip.IT8620E or
             Chip.IT8613E or
             Chip.IT879XE or
@@ -101,6 +104,12 @@ internal class IT87XX : ISuperIO
                 Controls = new float?[4];
                 break;
 
+            case Chip.IT8625E:
+                Voltages = new float?[7];
+                Temperatures = new float?[3];
+                Fans = new float?[6];
+                Controls = new float?[6];
+                break;
             case Chip.IT8628E:
                 Voltages = new float?[10];
                 Temperatures = new float?[6];
@@ -115,20 +124,14 @@ internal class IT87XX : ISuperIO
                 Controls = new float?[2];
                 break;
 
-                case Chip.IT8665E:
+            case Chip.IT8665E:
+            case Chip.IT8686E:
 
-                    Voltages = new float?[10];
-                    Temperatures = new float?[6];
-                    Fans = new float?[6];
-                    Controls = new float?[6];
-                    break;
-
-                case Chip.IT8686E:
-                    Voltages = new float?[10];
-                    Temperatures = new float?[6];
-                    Fans = new float?[5];
-                    Controls = new float?[6];
-                    break;
+                Voltages = new float?[10];
+                Temperatures = new float?[6];
+                Fans = new float?[6];
+                Controls = new float?[6];
+                break;
 
             case Chip.IT8688E:
                 Voltages = new float?[11];
@@ -187,7 +190,7 @@ internal class IT87XX : ISuperIO
         _voltageGain = chip switch
         {
             Chip.IT8613E or Chip.IT8620E or Chip.IT8628E or Chip.IT8631E or Chip.IT8721F or Chip.IT8728F or Chip.IT8771E or Chip.IT8772E or Chip.IT8686E or Chip.IT8688E or Chip.IT8689E => 0.012f,
-            Chip.IT8695E => 11f / 1000f,
+            Chip.IT8625E or Chip.IT8695E => 0.011f,
             Chip.IT8655E or Chip.IT8665E or Chip.IT879XE => 0.0109f,
             _ => 0.016f
         };
@@ -570,10 +573,10 @@ internal class IT87XX : ISuperIO
     private const byte VENDOR_ID_REGISTER = 0x58;
     private const byte VOLTAGE_BASE_REG = 0x20;
 
-        private readonly byte[] FAN_PWM_CTRL_REG;
-        private readonly byte[] FAN_PWM_CTRL_EXT_REG = { 0x63, 0x6b, 0x73, 0x7b, 0xa3, 0xab };
-        private readonly byte[] FAN_TACHOMETER_EXT_REG = { 0x18, 0x19, 0x1a, 0x81, 0x83, 0x94 };
-        private readonly byte[] FAN_TACHOMETER_REG = { 0x0d, 0x0e, 0x0f, 0x80, 0x82, 0x93 };
+    private readonly byte[] FAN_PWM_CTRL_REG;
+    private readonly byte[] FAN_PWM_CTRL_EXT_REG = { 0x63, 0x6b, 0x73, 0x7b, 0xa3, 0xab };
+    private readonly byte[] FAN_TACHOMETER_EXT_REG = { 0x18, 0x19, 0x1a, 0x81, 0x83, 0x94 };
+    private readonly byte[] FAN_TACHOMETER_REG = { 0x0d, 0x0e, 0x0f, 0x80, 0x82, 0x93 };
 
     // Address of the Fan Controller Main Control Register.
     // No need for the 2nd control register (bit 7 of 0x15 0x16 0x17),
