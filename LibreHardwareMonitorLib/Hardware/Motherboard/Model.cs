@@ -12,7 +12,7 @@ namespace LibreHardwareMonitor.Hardware.Motherboard;
 
 [SuppressMessage("ReSharper", "IdentifierTypo")]
 [SuppressMessage("ReSharper", "CommentTypo")]
-internal enum Model
+public enum Model
 {
     // ASRock
     _880GMH_USB3,
@@ -50,6 +50,7 @@ internal enum Model
     ROG_STRIX_B550_E_GAMING,
     ROG_STRIX_B550_F_GAMING_WIFI,
     ROG_STRIX_B550_I_GAMING,
+    ROG_STRIX_Z390_F_GAMING,
     ROG_STRIX_Z690_A_GAMING_WIFI_D4,
     ROG_MAXIMUS_X_HERO_WIFI_AC,
     ROG_MAXIMUS_Z690_FORMULA,
@@ -109,6 +110,7 @@ internal enum Model
     AX370_Gaming_5,
     AX370_Gaming_K7,
     B360_AORUS_GAMING_3_WIFI_CF,
+    B550_AORUS_PRO,
     B560M_AORUS_ELITE,
     B560M_AORUS_PRO,
     B560M_AORUS_PRO_AX,
