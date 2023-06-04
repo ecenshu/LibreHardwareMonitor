@@ -248,6 +248,8 @@ internal class Identification
                 return Model.H67A_USB3_B3;
             case var _ when name.Equals("H81M-HD3", StringComparison.OrdinalIgnoreCase):
                 return Model.H81M_HD3;
+            case var _ when name.Equals("B75M-D3H", StringComparison.OrdinalIgnoreCase):
+                return Model.B75M_D3H;
             case var _ when name.Equals("P35-DS3", StringComparison.OrdinalIgnoreCase):
                 return Model.P35_DS3;
             case var _ when name.Equals("P35-DS3L", StringComparison.OrdinalIgnoreCase):
@@ -390,6 +392,8 @@ internal class Identification
             case var _ when name.Equals("Z790 Taichi", StringComparison.OrdinalIgnoreCase):
             case var _ when name.Equals("Z790 Taichi Carrara", StringComparison.OrdinalIgnoreCase):
                 return Model.Z790_Taichi;
+            case var _ when name.Equals("B660M DS3H AX DDR4",StringComparison.OrdinalIgnoreCase):
+                return Model.B660M_DS3H_AX_DDR4;
             case var _ when name.Equals("Base Board Product Name", StringComparison.OrdinalIgnoreCase):
             case var _ when name.Equals("To be filled by O.E.M.", StringComparison.OrdinalIgnoreCase):
                 return Model.Unknown;
