@@ -90,7 +90,7 @@ internal class IT87XX : ISuperIO
             Chip.IT8686E or
             Chip.IT8688E or
             Chip.IT8689E or
-            Chip.IT8795E or
+            Chip.IT87952E or
             Chip.IT8628E or
             Chip.IT8625E or
             Chip.IT8620E or
@@ -151,7 +151,7 @@ internal class IT87XX : ISuperIO
                 Controls = new float?[6];
                 break;
 
-            case Chip.IT8795E:
+            case Chip.IT87952E:
                 Voltages = new float?[6];
                 Temperatures = new float?[3];
                 Fans = new float?[3];
@@ -194,7 +194,7 @@ internal class IT87XX : ISuperIO
         _voltageGain = chip switch
         {
             Chip.IT8613E or Chip.IT8620E or Chip.IT8628E or Chip.IT8631E or Chip.IT8721F or Chip.IT8728F or Chip.IT8771E or Chip.IT8772E or Chip.IT8686E or Chip.IT8688E or Chip.IT8689E => 0.012f,
-            Chip.IT8625E or Chip.IT8792E or Chip.IT8795E => 0.011f,
+            Chip.IT8625E or Chip.IT8792E or Chip.IT87952E => 0.011f,
             Chip.IT8655E or Chip.IT8665E => 0.0109f,
             _ => 0.016f
         };
@@ -271,7 +271,7 @@ internal class IT87XX : ISuperIO
         if (index < 0 || index >= Controls.Length)
             throw new ArgumentOutOfRangeException(nameof(index));
 
-        if (!Ring0.WaitIsaBusMutex(10))
+        if (!Mutexes.WaitIsaBus(10))
             return;
 
         if (value.HasValue)
@@ -307,7 +307,7 @@ internal class IT87XX : ISuperIO
             RestoreDefaultFanPwmControl(index);
         }
 
-        Ring0.ReleaseIsaBusMutex();
+        Mutexes.ReleaseIsaBus();
     }
 
     public string GetReport()
@@ -326,7 +326,7 @@ internal class IT87XX : ISuperIO
         r.AppendLine(_gpioAddress.ToString("X4", CultureInfo.InvariantCulture));
         r.AppendLine();
 
-        if (!Ring0.WaitIsaBusMutex(100))
+        if (!Mutexes.WaitIsaBus(100))
             return r.ToString();
 
         // dump memory of all banks if supported by chip
@@ -375,7 +375,7 @@ internal class IT87XX : ISuperIO
 
         r.AppendLine();
         r.AppendLine();
-        Ring0.ReleaseIsaBusMutex();
+        Mutexes.ReleaseIsaBus();
         return r.ToString();
     }
 
@@ -404,7 +404,7 @@ internal class IT87XX : ISuperIO
 
     public void Update()
     {
-        if (!Ring0.WaitIsaBusMutex(10))
+        if (!Mutexes.WaitIsaBus(10))
             return;
 
         for (int i = 0; i < Voltages.Length; i++)
@@ -505,7 +505,7 @@ internal class IT87XX : ISuperIO
             }
         }
 
-        Ring0.ReleaseIsaBusMutex();
+        Mutexes.ReleaseIsaBus();
     }
 
     private byte ReadByte(byte register, out bool valid)
