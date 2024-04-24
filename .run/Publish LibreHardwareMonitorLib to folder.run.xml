@@ -1,6 +1,6 @@
 ﻿<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Publish LibreHardwareMonitorLib to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
-    <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" runtime="win-x64" self_contained="true" target_folder="$PROJECT_DIR$/LibreHardwareMonitorLib/bin/Release/net8.0" target_framework="net8.0" uuid_high="-5748434598927644899" uuid_low="-4939320164478427366" />
+    <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" runtime="win-x64" target_folder="$PROJECT_DIR$/LibreHardwareMonitorLib/bin/Release/net8.0" target_framework="net8.0" uuid_high="-5748434598927644899" uuid_low="-4939320164478427366" />
     <method v="2" />
   </configuration>
 </component>
