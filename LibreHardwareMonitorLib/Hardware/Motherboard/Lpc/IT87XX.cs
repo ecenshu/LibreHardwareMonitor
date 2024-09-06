@@ -33,6 +33,7 @@ internal class IT87XX : ISuperIO
     private readonly byte _version;
     private readonly float _voltageGain;
     private IGigabyteController _gigabyteController;
+    private readonly bool _requiresBankSelect;  // Fix #780 Set to true for those chips that need a SelectBank(0) to fix dodgy temps and fan speeds
 
     private bool SupportsMultipleBanks => _bankCount > 1;
 
@@ -44,6 +45,7 @@ internal class IT87XX : ISuperIO
         _dataReg = (ushort)(address + DATA_REGISTER_OFFSET);
         _gpioAddress = gpioAddress;
         _gigabyteController = gigabyteController;
+        _requiresBankSelect = false;
 
         Chip = chip;
 
@@ -164,6 +166,7 @@ internal class IT87XX : ISuperIO
                 Temperatures = new float?[6];
                 Fans = new float?[3];
                 Controls = new float?[3];
+                _requiresBankSelect = true;
                 break;
 
             case Chip.IT8792E:
@@ -337,6 +340,9 @@ internal class IT87XX : ISuperIO
         if (!Mutexes.WaitIsaBus(100))
             return r.ToString();
 
+        if (_requiresBankSelect)
+            SelectBank(0);
+
         // dump memory of all banks if supported by chip
         for (byte b = 0; b < _bankCount; b++)
         {
@@ -414,6 +420,10 @@ internal class IT87XX : ISuperIO
     {
         if (!Mutexes.WaitIsaBus(10))
             return;
+
+        // Is this needed on every update?  Yes, until a way to detect resume from sleep/hibernation is added, as that invalidates the bank select.
+        if (_requiresBankSelect)
+            SelectBank(0);
 
         for (int i = 0; i < Voltages.Length; i++)
         {
