@@ -26,7 +26,7 @@
     <PackageReference Include="TaskScheduler" Version="2.11.0" />
     <PackageReference Include="OxyPlot.Core" Version="2.2.0" />
     <PackageReference Include="OxyPlot.WindowsForms" Version="2.2.0" />
-    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="System.Management" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web" />
@@ -45,8 +45,8 @@
     <Compile Update="UI\ParameterForm.Designer.cs">
       <DependentUpon>ParameterForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="UI\PortForm.Designer.cs">
-      <DependentUpon>PortForm.cs</DependentUpon>
+    <Compile Update="UI\InterfacePortForm.Designer.cs">
+      <DependentUpon>InterfacePortForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -62,8 +62,8 @@
     <EmbeddedResource Update="UI\ParameterForm.resx">
       <DependentUpon>ParameterForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="UI\PortForm.resx">
-      <DependentUpon>PortForm.cs</DependentUpon>
+    <EmbeddedResource Update="UI\InterfacePortForm.resx">
+      <DependentUpon>InterfacePortForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
